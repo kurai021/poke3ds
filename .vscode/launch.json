@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C/C++: arm-none-eabi-gcc Compilar y depurar el archivo activo",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Poke3DS.3dsx",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "C/C++: arm-none-eabi-gcc compilar archivo activo"
+        }
+    ]
+}
