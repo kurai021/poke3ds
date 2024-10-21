@@ -45,7 +45,8 @@ int main()
 			if (swkbdInputText(&swkbd, pokemon_name, sizeof(pokemon_name)) == SWKBD_BUTTON_RIGHT)
 			{
 				printf("Buscando datos de %s...\n", pokemon_name);
-				make_request(&topScreen, &bottomScreen, pokemon_name);
+				// make_request(&topScreen, &bottomScreen, "https://pokeapi.co/api/v2/pokemon", pokemon_name);
+				parse_pokemon_data(&topScreen, &bottomScreen, "https://pokeapi.co/api/v2/pokemon", pokemon_name);
 			}
 			else
 			{

@@ -7,8 +7,8 @@
 
 #define ROWS_PER_PAGE 1
 
-void print_pokemon_info(const char *name, int height, int weight, const PokemonSprite *sprite);
+void print_pokemon_info(const char *name, int height, int weight, const char *description);
 void print_moves_page(const json_t *moves, size_t start, size_t end);
-void show_moves_with_pagination(const json_t *moves, const char *name, int height, int weight, int pokemon_id, PrintConsole *topScreen, PrintConsole *bottomScreen);
+void show_moves_with_pagination(const json_t *moves, const char *name, int height, int weight, int pokemon_id, const char *description, PrintConsole *topScreen, PrintConsole *bottomScreen);
 
 #endif

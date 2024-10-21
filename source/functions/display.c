@@ -4,7 +4,7 @@
 #include "display.h"
 #include "sprites.h"
 
-void print_pokemon_info(const char *name, int height, int weight, const PokemonSprite *sprite)
+void print_pokemon_info(const char *name, int height, int weight, const char *description)
 {
 	float converted_height = height / 10.0f;
 	float converted_weight = weight / 10.0f;
@@ -13,11 +13,7 @@ void print_pokemon_info(const char *name, int height, int weight, const PokemonS
 	printf("Nombre: %s\n\n", name);
 	printf("Altura: %.1f metros\n\n", converted_height);
 	printf("Peso: %.1f kg\n\n", converted_weight);
-
-	if (sprite && sprite->image.tex)
-	{
-		C2D_DrawImageAt(sprite->image, 200.0f, 50.0f, 0.0f, NULL, 1.0f, 1.0f);
-	}
+	printf("Descripcion: %s\n\n", description);
 }
 
 void print_moves_page(const json_t *moves, size_t start, size_t end)
@@ -161,22 +157,8 @@ void print_moves_page(const json_t *moves, size_t start, size_t end)
 	}
 }
 
-void show_moves_with_pagination(const json_t *moves, const char *name, int height, int weight, int pokemon_id, PrintConsole *topScreen, PrintConsole *bottomScreen)
+void show_moves_with_pagination(const json_t *moves, const char *name, int height, int weight, int pokemon_id, const char *description, PrintConsole *topScreen, PrintConsole *bottomScreen)
 {
-	PokemonSprite sprite;
-	// Crear el target de la pantalla superior
-	C3D_RenderTarget *top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-	if (!top)
-	{
-		printf("No se pudo crear el target de la pantalla superior.\n");
-		return;
-	}
-
-	if (!load_pokemon_sprite(&sprite, pokemon_id))
-	{
-		printf("No se pudo cargar el sprite del Pokémon con ID: %d\n", pokemon_id);
-		return;
-	}
 
 	size_t total_moves = json_array_size(moves);
 	size_t total_pages = (total_moves + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE;
@@ -187,15 +169,11 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 		consoleSelect(topScreen);
 		consoleClear();
 
-		// Iniciar la escena de Citro2D para que se puedan dibujar imágenes
-		C2D_SceneBegin(top);
-
-		// Renderizar el sprite del Pokémon
-		load_pokemon_sprite(&sprite, pokemon_id);
-
 		if (page == 0)
 		{
-			print_pokemon_info(name, height, weight, &sprite);
+			// Renderizar el sprite del Pokémon
+			load_pokemon_sprite(pokemon_id);
+			print_pokemon_info(name, height, weight, description);
 		}
 		else
 		{
@@ -219,7 +197,7 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 
 			if (kDown & KEY_START)
 			{
-				C2D_SpriteSheetFree(sprite.spriteSheet);
+				free_texture();
 				return;
 			}
 
@@ -248,5 +226,5 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 	}
 
 	// Liberar recursos
-	C2D_SpriteSheetFree(sprite.spriteSheet);
+	free_texture();
 }
