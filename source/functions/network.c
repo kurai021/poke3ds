@@ -20,7 +20,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 
 	if (res != 0)
 	{
-		printf("Error al abrir el contexto: 0x%x\n", res);
+		printf("Error al abrir el contexto: 0x%ld\n", res);
 		return 0;
 	}
 
@@ -28,7 +28,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 	res = httpcBeginRequest(&context);
 	if (res != 0)
 	{
-		printf("Error al iniciar la solicitud: 0x%x\n", res);
+		printf("Error al iniciar la solicitud: 0x%ld\n", res);
 		httpcCloseContext(&context);
 		return 0;
 	}
@@ -39,20 +39,20 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 
 	if (res != 0)
 	{
-		printf("Error al obtener el estado de la respuesta: 0x%x\n", res);
+		printf("Error al obtener el estado de la respuesta: 0x%ld\n", res);
 		httpcCloseContext(&context);
 		return 0;
 	}
 
 	if (responseCode != 200)
 	{
-		printf("Código de respuesta HTTP: %d\n", responseCode);
+		printf("Código de respuesta HTTP: %lu\n", responseCode);
 		httpcCloseContext(&context);
 		return 0;
 	}
 
 	// Manejar la respuesta de manera incremental
-	char buffer[4096];
+	unsigned char buffer[4096];
 	u32 bytesRead = 0;
 	size_t totalSize = 0;
 	char *json_data = malloc(1);
@@ -73,7 +73,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 				printf("Error al reallocar memoria.\n");
 				break;
 			}
-			strcpy(json_data + totalSize, buffer);
+			strcpy(json_data + totalSize, (const char *)buffer);
 			totalSize += bytesRead;
 
 			printf("\nBytes descargados: %zu\n", totalSize);
@@ -85,7 +85,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 		}
 		else
 		{
-			printf("\nError al descargar los datos: 0x%x\n", res);
+			printf("\nError al descargar los datos: 0x%lu\n", res);
 			break;
 		}
 	}
@@ -172,6 +172,6 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 
 	json_decref(root);
 	json_decref(entries);
-	free(pokemon_info);
-	free(pokemon_description);
+	free((char *)pokemon_info);
+	free((char *)pokemon_description);
 }
