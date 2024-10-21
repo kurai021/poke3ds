@@ -90,11 +90,6 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 		}
 	}
 
-	// Analizar el JSON completo
-	// parse_pokemon_data(json_data, topScreen, bottomScreen);
-	// Liberar memoria
-	// free(json_data);
-
 	// Cerrar el contexto
 	httpcCloseContext(&context);
 	httpcExit();
@@ -113,6 +108,8 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 		printf("Error al analizar JSON: %s\n", error.text);
 		return;
 	}
+
+	// Creo un nuevo arreglo solo con los arreglos necesarios
 
 	json_t *id_json = json_object_get(root, "id");
 	int pokemon_id = json_integer_value(id_json);
@@ -157,6 +154,8 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 			json_t *language = json_object_get(entry, "language");
 			json_t *lang_name = json_object_get(language, "name");
 
+			// Buscar la primera descripción en español
+
 			if (json_is_string(lang_name) && strcmp(json_string_value(lang_name), "es") == 0)
 			{
 				json_t *text = json_object_get(entry, "flavor_text");
@@ -168,6 +167,8 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 			}
 		}
 	}
+
+	// Destruir los arreglos de JSON luego de usar y liberar memoria
 
 	json_decref(root);
 	json_decref(entries);
