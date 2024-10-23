@@ -3,6 +3,7 @@
 
 #include "display.h"
 #include "sprites.h"
+#include "network.h"
 
 void print_pokemon_info(const char *name, int height, int weight, const char *description)
 {
@@ -18,11 +19,11 @@ void print_pokemon_info(const char *name, int height, int weight, const char *de
 
 void print_moves_page(const json_t *moves, size_t start, size_t end)
 {
-	// Imprimir encabezado de la tabla
+	// Print header of the table
 	printf("%-10s | %-2s | %-10s | %-28s\n", "Move", "Nv", "Method", "Game");
 	printf("--------------------------------------------------\n");
 
-	// Iterar y mostrar solo las filas de la página actual
+	// Iterate and display only the rows of the current page
 	for (size_t i = start; i < end && i < json_array_size(moves); i++)
 	{
 		json_t *move_entry = json_array_get(moves, i);
@@ -50,7 +51,7 @@ void print_moves_page(const json_t *moves, size_t start, size_t end)
 			json_t *version = json_object_get(detail, "version_group");
 			const char *version_string = json_string_value(json_object_get(version, "name"));
 
-			// Comparar y asignar nombres legibles para los juegos
+			// Compare and assign readable names for the game list
 			if (strcmp(version_string, "lets-go-pikachu-lets-go-eevee") == 0)
 			{
 				version_name = "Let's Go";
@@ -144,7 +145,7 @@ void print_moves_page(const json_t *moves, size_t start, size_t end)
 				version_name = (char *)version_string;
 			}
 
-			// Imprimir la información si es válida
+			// Print the information if it is valid
 			if (json_is_string(method_name) && version_name != NULL)
 			{
 				printf("%-10s | %-2d | %-10s | %-28s\n",
@@ -171,7 +172,7 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 
 		if (page == 0)
 		{
-			// Renderizar el sprite del Pokémon
+			// Render the Pokémon sprite
 			load_pokemon_sprite(pokemon_id);
 			print_pokemon_info(name, height, weight, description);
 		}
@@ -180,16 +181,16 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 			size_t start = (page - 1) * ROWS_PER_PAGE;
 			size_t end = start + ROWS_PER_PAGE;
 			if (end > total_moves)
-				end = total_moves; // Asegúrate de no sobrepasar el límite
+				end = total_moves; // Make sure not to exceed the limit
 			print_moves_page(moves, start, end);
 		}
 
 		consoleSelect(bottomScreen);
 		consoleClear();
-		printf("Press L for previous page, R for next page, START to exit.\n");
+		printf("Press L for previous page, R for next page, A for search a new Pokemon, START to exit.\n");
 		printf("Page %zu / %zu\n", page + 1, total_pages);
 
-		// Manejo de entrada del usuario
+		// Handling user input again
 		while (aptMainLoop())
 		{
 			hidScanInput();
@@ -199,6 +200,26 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 			{
 				free_texture();
 				return;
+			}
+
+			if (kDown & KEY_A)
+			{
+				// Configure and display the virtual keyboard
+				SwkbdState swkbd;
+				char pokemon_name[MAX_POKEMON_NAME_LEN] = {0};
+				swkbdInit(&swkbd, SWKBD_TYPE_NORMAL, 2, -1);
+				swkbdSetHintText(&swkbd, "Enter the name of the Pokémon");
+
+				// Obtener el nombre ingresado
+				if (swkbdInputText(&swkbd, pokemon_name, sizeof(pokemon_name)) == SWKBD_BUTTON_RIGHT)
+				{
+					printf("Searching data for %s...\n", pokemon_name);
+					parse_pokemon_data(&*topScreen, &*bottomScreen, "https://pokeapi.co/api/v2/pokemon", pokemon_name);
+				}
+				else
+				{
+					printf("Entry cancelled.\n");
+				}
 			}
 
 			if (kDown & KEY_R)
@@ -225,6 +246,6 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 		}
 	}
 
-	// Liberar recursos
+	// Free resources
 	free_texture();
 }

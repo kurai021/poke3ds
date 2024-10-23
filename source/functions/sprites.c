@@ -18,6 +18,8 @@ int load_pokemon_sprite(int pokemon_id)
 	int sheet_index = pokemon_id / POKEMON_PER_SHEET;
 	size_t sprite_index;
 
+	// Each Spritesheet has 200 sprites of 64 x 64 pixels making a sprite no larger than 1024 x 1024 pixels (the maximum that the Nintendo 3DS can load)
+
 	if (sheet_index == 0)
 	{
 		sprite_index = pokemon_id;
@@ -43,7 +45,7 @@ int load_pokemon_sprite(int pokemon_id)
 		sprite_index = pokemon_id - 1000;
 	}
 
-	// Comprobar si el índice está dentro del rango válido
+	// Check if the index is within the valid range
 	if (sprite_index >= POKEMON_PER_SHEET || sheet_index >= SHEET_COUNT)
 	{
 		printf("Error: Invalid sprite index for Pokémon ID %d\n", pokemon_id);
@@ -53,7 +55,7 @@ int load_pokemon_sprite(int pokemon_id)
 	char path[256];
 	snprintf(path, sizeof(path), "romfs:/gfx/sprites%d.t3x", sheet_index);
 
-	// Liberar el spriteSheet anterior si ya está cargado
+	// Release the previous spritesheet if it is already loaded
 	if (spriteSheet)
 	{
 		free_texture();
@@ -67,7 +69,7 @@ int load_pokemon_sprite(int pokemon_id)
 		return 1;
 	}
 
-	// Inicializar sprites
+	// Initialize sprites
 
 	Sprite *sprite = &sprites[sheet_index];
 

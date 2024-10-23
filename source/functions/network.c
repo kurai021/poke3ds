@@ -7,14 +7,14 @@
 
 char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const char *request_url, const char *request)
 {
-	// Inicializar el servicio HTTP
+	// Initialize the HTTP service
 	httpcInit(0);
 
-	// Crear la URL dinámica con el nombre del Pokémon
+	// Create the dynamic URL with the name of the Pokémon
 	char url[128];
 	snprintf(url, sizeof(url), "%s/%s/", request_url, request);
 
-	// Inicializar variables para la solicitud
+	// Initialize variables for the request
 	httpcContext context;
 	Result res = httpcOpenContext(&context, HTTPC_METHOD_GET, url, 1);
 
@@ -24,7 +24,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 		return 0;
 	}
 
-	// Hacer la solicitud
+	// Make the request
 	res = httpcBeginRequest(&context);
 	if (res != 0)
 	{
@@ -33,7 +33,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 		return 0;
 	}
 
-	// Recibir la respuesta
+	// Receive the response
 	u32 responseCode;
 	res = httpcGetResponseStatusCode(&context, &responseCode);
 
@@ -51,7 +51,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 		return 0;
 	}
 
-	// Manejar la respuesta de manera incremental
+	// Handle the response incrementally
 	unsigned char buffer[4096];
 	u32 bytesRead = 0;
 	size_t totalSize = 0;
@@ -90,7 +90,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 		}
 	}
 
-	// Cerrar el contexto
+	// Close the context
 	httpcCloseContext(&context);
 	httpcExit();
 
@@ -109,7 +109,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 		return;
 	}
 
-	// Creo un nuevo arreglo solo con los arreglos necesarios
+	// Create a new array with only the necessary content
 
 	json_t *id_json = json_object_get(root, "id");
 	int pokemon_id = json_integer_value(id_json);
@@ -154,7 +154,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 			json_t *language = json_object_get(entry, "language");
 			json_t *lang_name = json_object_get(language, "name");
 
-			// Buscar la primera descripción en español
+			// Find the first description in English
 
 			if (json_is_string(lang_name) && strcmp(json_string_value(lang_name), "en") == 0)
 			{
@@ -168,7 +168,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 		}
 	}
 
-	// Destruir los arreglos de JSON luego de usar y liberar memoria
+	// Destroy JSON arrays after using and freeing memory
 
 	json_decref(root);
 	json_decref(entries);
