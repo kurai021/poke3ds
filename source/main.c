@@ -13,6 +13,7 @@ int main()
 	// Inicializar servicios de la 3DS
 	romfsInit();
 	gfxInitDefault();
+	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
 	PrintConsole topScreen, bottomScreen;
@@ -20,7 +21,6 @@ int main()
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 
-	printf("Hola, Mundo desde la Nintendo 3DS!\n");
 	printf("Presiona A para buscar un Pokémon.\n");
 	printf("Presiona START para salir.\n");
 

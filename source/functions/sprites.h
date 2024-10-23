@@ -8,7 +8,7 @@
 #define SPRITE_SIZE 64
 #define SHEET_COUNT 6
 
-bool load_pokemon_sprite(int pokemon_id);
+int load_pokemon_sprite(int pokemon_id);
 void free_texture(void);
 
 #endif
