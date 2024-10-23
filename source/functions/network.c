@@ -20,7 +20,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 
 	if (res != 0)
 	{
-		printf("Error al abrir el contexto: 0x%ld\n", res);
+		printf("Error opening context: 0x%ld\n", res);
 		return 0;
 	}
 
@@ -28,7 +28,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 	res = httpcBeginRequest(&context);
 	if (res != 0)
 	{
-		printf("Error al iniciar la solicitud: 0x%ld\n", res);
+		printf("Error starting request: 0x%ld\n", res);
 		httpcCloseContext(&context);
 		return 0;
 	}
@@ -39,14 +39,14 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 
 	if (res != 0)
 	{
-		printf("Error al obtener el estado de la respuesta: 0x%ld\n", res);
+		printf("Error getting response status: 0x%ld\n", res);
 		httpcCloseContext(&context);
 		return 0;
 	}
 
 	if (responseCode != 200)
 	{
-		printf("Código de respuesta HTTP: %lu\n", responseCode);
+		printf("HTTP Response Code: %lu\n", responseCode);
 		httpcCloseContext(&context);
 		return 0;
 	}
@@ -58,7 +58,7 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 	char *json_data = malloc(1);
 	json_data[0] = '\0';
 
-	printf("Descargando los datos...\n");
+	printf("Downloading data...\n");
 
 	while (true)
 	{
@@ -70,22 +70,22 @@ char *make_request(PrintConsole *topScreen, PrintConsole *bottomScreen, const ch
 			json_data = realloc(json_data, totalSize + bytesRead + 1);
 			if (!json_data)
 			{
-				printf("Error al reallocar memoria.\n");
+				printf("Error reallocating memory.\n");
 				break;
 			}
 			strcpy(json_data + totalSize, (const char *)buffer);
 			totalSize += bytesRead;
 
-			printf("\nBytes descargados: %zu\n", totalSize);
+			printf("\nBytes downloaded: %zu\n", totalSize);
 		}
 		else if (res == 0 && bytesRead == 0)
 		{
-			printf("\nDescarga completa. Total de bytes descargados: %zu\n", totalSize);
+			printf("\nDownload complete. Total bytes downloaded: %zu\n", totalSize);
 			break;
 		}
 		else
 		{
-			printf("\nError al descargar los datos: 0x%lu\n", res);
+			printf("\nError downloading data: 0x%lu\n", res);
 			break;
 		}
 	}
@@ -105,7 +105,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 
 	if (!root)
 	{
-		printf("Error al analizar JSON: %s\n", error.text);
+		printf("Error parsing JSON: %s\n", error.text);
 		return;
 	}
 
@@ -126,7 +126,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 	json_t *moves = json_object_get(root, "moves");
 	if (!json_is_array(moves))
 	{
-		printf("No se encontró una lista de movimientos.\n");
+		printf("No list of moves was found.\n");
 		json_decref(root);
 		return;
 	}
@@ -138,7 +138,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 	json_t *entries = json_loads(pokemon_description, 0, &error);
 	if (!entries)
 	{
-		printf("Error al analizar JSON: %s\n", error.text);
+		printf("Error parsing JSON: %s\n", error.text);
 		return;
 	}
 
@@ -156,7 +156,7 @@ void parse_pokemon_data(PrintConsole *topScreen, PrintConsole *bottomScreen, con
 
 			// Buscar la primera descripción en español
 
-			if (json_is_string(lang_name) && strcmp(json_string_value(lang_name), "es") == 0)
+			if (json_is_string(lang_name) && strcmp(json_string_value(lang_name), "en") == 0)
 			{
 				json_t *text = json_object_get(entry, "flavor_text");
 				if (json_is_string(text))

@@ -21,8 +21,8 @@ int main()
 	consoleInit(GFX_TOP, &topScreen);
 	consoleInit(GFX_BOTTOM, &bottomScreen);
 
-	printf("Presiona A para buscar un Pokémon.\n");
-	printf("Presiona START para salir.\n");
+	printf("Press A to search for a Pokemon.\n");
+	printf("Press START to exit.\n");
 
 	// Bucle principal
 	while (aptMainLoop())
@@ -39,17 +39,17 @@ int main()
 			SwkbdState swkbd;
 			char pokemon_name[MAX_POKEMON_NAME_LEN] = {0};
 			swkbdInit(&swkbd, SWKBD_TYPE_NORMAL, 2, -1);
-			swkbdSetHintText(&swkbd, "Ingresa el nombre del Pokémon");
+			swkbdSetHintText(&swkbd, "Enter the name of the Pokémon");
 
 			// Obtener el nombre ingresado
 			if (swkbdInputText(&swkbd, pokemon_name, sizeof(pokemon_name)) == SWKBD_BUTTON_RIGHT)
 			{
-				printf("Buscando datos de %s...\n", pokemon_name);
+				printf("Searching data for %s...\n", pokemon_name);
 				parse_pokemon_data(&topScreen, &bottomScreen, "https://pokeapi.co/api/v2/pokemon", pokemon_name);
 			}
 			else
 			{
-				printf("Entrada cancelada.\n");
+				printf("Entry cancelled.\n");
 			}
 		}
 

@@ -9,17 +9,17 @@ void print_pokemon_info(const char *name, int height, int weight, const char *de
 	float converted_height = height / 10.0f;
 	float converted_weight = weight / 10.0f;
 
-	printf("\n\nInformación del Pokémon:\n\n");
-	printf("Nombre: %s\n\n", name);
-	printf("Altura: %.1f metros\n\n", converted_height);
-	printf("Peso: %.1f kg\n\n", converted_weight);
-	printf("Descripcion: %s\n\n", description);
+	printf("\n\nPokemon Info:\n\n");
+	printf("Name: %s\n\n", name);
+	printf("Height: %.1f m\n\n", converted_height);
+	printf("Weight: %.1f kg\n\n", converted_weight);
+	printf("Description: %s\n\n", description);
 }
 
 void print_moves_page(const json_t *moves, size_t start, size_t end)
 {
 	// Imprimir encabezado de la tabla
-	printf("%-10s | %-2s | %-10s | %-28s\n", "Movimiento", "Nv", "Metodo", "Juego");
+	printf("%-10s | %-2s | %-10s | %-28s\n", "Move", "Nv", "Method", "Game");
 	printf("--------------------------------------------------\n");
 
 	// Iterar y mostrar solo las filas de la página actual
@@ -186,8 +186,8 @@ void show_moves_with_pagination(const json_t *moves, const char *name, int heigh
 
 		consoleSelect(bottomScreen);
 		consoleClear();
-		printf("Presiona L para página anterior, R para siguiente página, START para salir.\n");
-		printf("Página %zu de %zu\n", page + 1, total_pages);
+		printf("Press L for previous page, R for next page, START to exit.\n");
+		printf("Page %zu / %zu\n", page + 1, total_pages);
 
 		// Manejo de entrada del usuario
 		while (aptMainLoop())

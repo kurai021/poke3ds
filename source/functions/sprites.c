@@ -46,7 +46,7 @@ int load_pokemon_sprite(int pokemon_id)
 	// Comprobar si el índice está dentro del rango válido
 	if (sprite_index >= POKEMON_PER_SHEET || sheet_index >= SHEET_COUNT)
 	{
-		printf("Error: Índice de sprite inválido para el ID de Pokémon %d\n", pokemon_id);
+		printf("Error: Invalid sprite index for Pokémon ID %d\n", pokemon_id);
 		return 1;
 	}
 
@@ -63,7 +63,7 @@ int load_pokemon_sprite(int pokemon_id)
 
 	if (!spriteSheet)
 	{
-		printf("Error al cargar el spritesheet %s\n", path);
+		printf("Error loading spritesheet %s\n", path);
 		return 1;
 	}
 
